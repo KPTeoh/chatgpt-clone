@@ -19,10 +19,10 @@ const imagekit = new ImageKit({
 
 
 app.get("/api/upload", (req, res) => {
-    const result = imagekit.getAuthenticationParameters();
+  const result = imagekit.getAuthenticationParameters();
   res.send(result);
 })
 
 app.listen(port, ()=> {
-    console.log("Server is running on 3000");   
+  console.log("Server is running on 3000");   
 });
