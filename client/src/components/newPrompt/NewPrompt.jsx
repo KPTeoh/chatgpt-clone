@@ -3,6 +3,7 @@ import "./newPrompt.css";
 import Upload from "../upload/Upload";
 import { IKImage } from "imagekitio-react";
 import model from "../../lib/gemini";
+import Markdown from "react-markdown";
 
 const NewPrompt = () => {
   const endRef = useRef(null);
@@ -15,17 +16,54 @@ const NewPrompt = () => {
     aiData: {},
   });
 
+  const chat = model.startChat({
+    history: [
+      {
+        role: "user",
+        parts: [{ text: "Hello World" }],
+      },
+      {
+        role: "model",
+        parts: [{ text: "Hello Model" }],
+      },
+    ],
+    generationConfig: {
+      // maxOutputTokens: 100,
+    },
+  });
+
   useEffect(() => {
     endRef.current.scrollIntoView({ behavior: "smooth" });
-  }, []);
+  }, [question, answer, img.dbData]);
 
-  const add = async () => {
-    const prompt = "Write a story about an AI and magic";
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+  const add = async (text) => {
+    setQuestion(text);
 
-    console.log(text);
+    const result = await chat.sendMessageStream(
+      Object.entries(img.aiData).length ? [img.aiData, text] : [text]
+    );
+    let accumulatedText = "";
+    for await (const chunk of result.stream) {
+      const chunkText = chunk.text();
+      console.log(chunkText);
+      accumulatedText += chunkText;
+      setAnswer(accumulatedText);
+    }
+    setImg({
+      isLoading: false,
+      error: "",
+      dbData: {},
+      aiData: {},
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const text = e.target.text.value;
+    if (!text) return;
+
+    add(text);
   };
 
   return (
@@ -39,12 +77,18 @@ const NewPrompt = () => {
           transformation={[{ width: 380 }]}
         />
       )}
+      {question && <div className="message user">{question}</div>}
+      {answer && (
+        <div className="message">
+          <Markdown>{answer}</Markdown>
+        </div>
+      )}
       <div className="endChat" ref={endRef}></div>
       <div className="newPrompt">
-        <form className="newForm">
+        <form className="newForm" onSubmit={handleSubmit}>
           <Upload setImg={setImg} />
           <input id="file" type="file" multiple={false} hidden />
-          <input type="text" placeholder="Ask anything...." />
+          <input type="text" name="text" placeholder="Ask anything...." />
           <button>
             <img src="/arrow.png" alt="" />
           </button>
