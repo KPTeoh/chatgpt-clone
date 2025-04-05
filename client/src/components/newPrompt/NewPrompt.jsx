@@ -1,19 +1,32 @@
 import { useEffect, useRef, useState } from "react";
 import "./newPrompt.css";
 import Upload from "../upload/Upload";
+import { IKImage } from "imagekitio-react";
+import model from "../../lib/gemini";
 
 const NewPrompt = () => {
   const endRef = useRef(null);
-
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
   const [img, setImg] = useState({
     isLoading: false,
     error: "",
     dbData: {},
+    aiData: {},
   });
 
   useEffect(() => {
     endRef.current.scrollIntoView({ behavior: "smooth" });
   }, []);
+
+  const add = async () => {
+    const prompt = "Write a story about an AI and magic";
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+
+    console.log(text);
+  };
 
   return (
     <>
