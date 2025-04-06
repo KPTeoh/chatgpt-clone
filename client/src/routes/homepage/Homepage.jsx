@@ -13,8 +13,9 @@ const Homepage = () => {
         <h1>Hasten AI</h1>
         <h2>Supercharge your creativity and productivity</h2>
         <h3>
-          HastenAI is a next generation AI assistant built by KP and trained to
-          be safe, accurate, and secure to help you do your best work.
+          Hasten AI is a next generation AI assistant built by KP Teoh and
+          trained to be safe, accurate, and secure to help you do your best
+          work.
         </h3>
         <Link to="/dashboard">Get Started</Link>
       </div>
@@ -38,22 +39,22 @@ const Homepage = () => {
             <TypeAnimation
               sequence={[
                 // Same substring at the start will only be typed out once, initially
-                "Human: We produce food for Mice",
+                "Human:We produce food for Mice",
                 2000,
                 () => {
                   setTypingStatus("bot");
                 },
-                "Bot: We produce food for Hamsters",
+                "Bot:We produce food for Hamsters",
                 2000,
                 () => {
                   setTypingStatus("human2");
                 },
-                "Human2: We produce food for Guinea Pigs",
+                "Human2:We produce food for Guinea Pigs",
                 2000,
                 () => {
                   setTypingStatus("bot");
                 },
-                "Bot: We produce food for Chinchillas",
+                "Bot:We produce food for Chinchillas",
                 2000,
                 () => {
                   setTypingStatus("human1");
